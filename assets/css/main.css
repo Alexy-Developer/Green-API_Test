@@ -1,0 +1,36 @@
+body { 
+    font-family: sans-serif; 
+    padding: 20px; 
+}
+
+input, button, textarea { 
+    margin: 5px 0; 
+    width: 100%; 
+    padding: 8px; 
+}
+
+textarea { 
+    flex: 1;
+    resize: vertical;
+}
+
+
+.container{
+   display: flex;
+   gap: 20px;
+}
+
+
+.Methods{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 300px;
+}
+
+.ApiAnswer{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 60px;
+}
