@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Green-API Test</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class = "Methods">
+      <!-- Запрос на ввод ID и API токена -->
+
+      <label>ID Instance:</label>
+      <input type="text" id="idInstance" placeholder="Введите ID Instance">
+
+      <label>API Token:</label>
+      <input type="text" id="apiTokenInstance" placeholder="Введите API Token">
+
+      <button onclick="getSettings()">getSettings</button>
+      <button onclick="getStateInstance()">getStateInstance</button>
+
+      <!--Отправка сообщения по номеру телефона на Whatsapp-->
+      <h3>Отправить сообщение</h3>
+      <input type="text" id="phoneNumber" placeholder="Номер телефона (в формате 7707XXXXXXX)">
+      <input type="text" id="messageText" placeholder="Сообщение">
+      <button onclick="sendMessage()">sendMessage</button>
+
+    <!--Отправка файла по номеру телефона на Whatsapp-->
+      <h3>Отправить файл по URL</h3>
+      <input type="text" id="filePhoneNumber" placeholder="Номер телефона (в формате 7707XXXXXXX)">
+      <input type="text" id="fileUrl" placeholder="Ссылка на файл">
+      <input type="text" id="fileName" placeholder="Имя файла (например, photo.jpg)">
+      <button onclick="sendFileByUrl()">sendFileByUrl</button>
+
+    </div>
+
+    <div class = "ApiAnswer">
+      <!--Ответ-->
+      <h3>Ответ от API:</h3>
+      <textarea id="response" readonly></textarea>
+
+    </div>
+  </div>
+
+  <script>
+    // Получаем настройки текущего инстанса
+    function getSettings() {
+      const id = document.getElementById('idInstance').value;
+      const token = document.getElementById('apiTokenInstance').value;
+      fetch(`https://api.green-api.com/waInstance${id}/getSettings/${token}`)
+        .then(response => response.json())
+        .then(data => showResponse(data))
+        .catch(error => showResponse(error));
+    }
+    // Проверяем состояние подключение
+    function getStateInstance() {
+      const id = document.getElementById('idInstance').value;
+      const token = document.getElementById('apiTokenInstance').value;
+      fetch(`https://api.green-api.com/waInstance${id}/getStateInstance/${token}`)
+        .then(response => response.json())
+        .then(data => showResponse(data))
+        .catch(error => showResponse(error));
+    }
+    // Отправляем сообщение на указанный номер
+    function sendMessage() {
+      const id = document.getElementById('idInstance').value;
+      const token = document.getElementById('apiTokenInstance').value;
+      const phone = document.getElementById('phoneNumber').value + "@c.us";
+      const message = document.getElementById('messageText').value;
+
+      fetch(`https://api.green-api.com/waInstance${id}/sendMessage/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatId: phone, message: message })
+      })
+      .then(response => response.json())
+      .then(data => showResponse(data))
+      .catch(error => showResponse(error));
+    }
+    // а тут отправляем на него файл 
+    function sendFileByUrl() {
+      const id = document.getElementById('idInstance').value;
+      const token = document.getElementById('apiTokenInstance').value;
+      const phone = document.getElementById('filePhoneNumber').value + "@c.us";
+      const url = document.getElementById('fileUrl').value;
+      const name = document.getElementById('fileName').value;
+
+      fetch(`https://api.green-api.com/waInstance${id}/sendFileByUrl/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chatId: phone, urlFile: url, fileName: name })
+      })
+      .then(response => response.json())
+      .then(data => showResponse(data))
+      .catch(error => showResponse(error));
+    }
+    // А вот тут мы обробатываем ответ и выводим его
+    function showResponse(data) {
+      document.getElementById('response').value = JSON.stringify(data, null, 2);
+    }
+  </script>
+
+</body>
+</html>
